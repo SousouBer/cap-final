@@ -99,12 +99,22 @@
         {
           "pattern": ":?query:",
           "name": "HotelsList",
-          "target": "HotelsList"
+          "target": [
+            "HotelsList"
+          ]
         },
         {
           "pattern": "Hotels({key}):?query:",
           "name": "HotelsObjectPage",
-          "target": "HotelsObjectPage"
+          "target": [
+            "HotelsList",
+            "HotelsObjectPage"
+          ]
+        },
+        {
+          "name": "Hotels_roomsObjectPage",
+          "pattern": "Hotels({key})/rooms({roomsKey}):?query:",
+          "target": "Hotels_roomsObjectPage"
         }
       ],
       "targets": {
@@ -140,7 +150,25 @@
           "options": {
             "settings": {
               "editableHeaderContent": false,
-              "contextPath": "/Hotels"
+              "contextPath": "/Hotels",
+              "navigation": {
+                "rooms": {
+                  "detail": {
+                    "route": "Hotels_roomsObjectPage"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "Hotels_roomsObjectPage": {
+          "type": "Component",
+          "id": "Hotels_roomsObjectPage",
+          "name": "sap.fe.templates.ObjectPage",
+          "options": {
+            "settings": {
+              "navigation": {},
+              "contextPath": "/Hotels/rooms"
             }
           }
         }

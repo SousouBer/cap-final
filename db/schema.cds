@@ -17,11 +17,13 @@ entity Users : cuid {
 }
 
 entity Hotels : cuid, managed {
+  imageUrl: String;
   name: String;
   description: String;
   location: String;
   rating: Decimal;
   owner: Association to Users;
+  rooms: Association to many Rooms on rooms.hotel = $self;
 }
 
 type Type : String enum {
@@ -35,6 +37,7 @@ type Status : String enum {
 }
 
 entity Rooms : cuid, managed {
+  imageUrl: String;
   number: Integer;
   type: Type;
   status: Status;
