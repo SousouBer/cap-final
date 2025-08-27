@@ -14,6 +14,7 @@ entity Users : cuid {
   email: String;
   phone: String;
   role: Role;
+  reviews: Composition of many Reviews on reviews.reviewer = $self;
 }
 
 entity Hotels : cuid, managed {
@@ -21,9 +22,10 @@ entity Hotels : cuid, managed {
   name: String;
   description: String;
   location: String;
-  rating: Decimal;
+  score: Decimal;
   owner: Association to Users;
   rooms: Association to many Rooms on rooms.hotel = $self;
+  reviews: Composition of many Reviews on reviews.hotel = $self;
 }
 
 type Type : String enum {
@@ -49,9 +51,10 @@ entity Rooms : cuid, managed {
 
 entity Reviews : cuid, managed {
   reviewer : Association to Users;
+  date: Date;
   hotel: Association to Hotels;
   description: String;
-  score: Decimal;
+  rating: Decimal;
 }
 
 type BookingStatus : String enum {

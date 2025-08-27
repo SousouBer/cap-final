@@ -157,6 +157,16 @@
                     "route": "Hotels_roomsObjectPage"
                   }
                 }
+              },
+              "controlConfiguration": {
+                "rooms/@com.sap.vocabularies.UI.v1.LineItem#i18nHotelRooms": {
+                  "tableSettings": {
+                    "personalization": {
+                      "filter": true,
+                      "sort": true
+                    }
+                  }
+                }
               }
             }
           }

@@ -1,1 +1,4 @@
-ID,reviewer_ID,hotel_ID,description,score,createdAt,createdBy,modifiedAt,modifiedBy
+ID,date,reviewer_ID,hotel_ID,description,rating,createdAt,createdBy,modifiedAt,modifiedBy
+0a801061-0000-4000-a000-000000000001,2025-08-20,3f2504e0-4f89-11d3-9a0c-0305e82c3301,f47ac10b-58cc-4372-a567-0e02b2c3d479,Great location and friendly staff,4.5,2025-08-20T10:15:00Z,admin,2025-08-20T10:15:00Z,admin
+c0a80101-0000-4000-a000-000000000002,2025-08-20,3f2504e0-4f89-11d3-9a0c-0305e82c3301,f47ac10b-58cc-4372-a567-0e02b2c3d479,Clean rooms but a bit noisy at night,4.0,2025-08-21T09:00:00Z,admin,2025-08-21T09:00:00Z,admin
+c0a80101-0000-4000-a000-000000000003,2025-08-20,3f2504e0-4f89-11d3-9a0c-0305e82c3301,f47ac10b-58cc-4372-a567-0e02b2c3d479,Excellent breakfast and service,5.0,2025-08-22T08:30:00Z,admin,2025-08-22T08:30:00Z,admin

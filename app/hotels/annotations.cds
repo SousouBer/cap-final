@@ -22,8 +22,8 @@ annotate service.Hotels with @(
             },
             {
                 $Type : 'UI.DataField',
-                Label : 'rating',
-                Value : rating,
+                Value : score,
+                Label : '{i18n>Score}',
             },
         ],
     },
@@ -36,15 +36,15 @@ annotate service.Hotels with @(
         },
         {
             $Type : 'UI.ReferenceFacet',
-            Label : '{i18n>TheListOfRooms}',
-            ID : 'i18nTheListOfRooms',
-            Target : '@UI.FieldGroup#i18nTheListOfRooms',
-        },
-        {
-            $Type : 'UI.ReferenceFacet',
             Label : '{i18n>HotelRooms}',
             ID : 'i18nHotelRooms',
             Target : 'rooms/@UI.LineItem#i18nHotelRooms',
+        },
+        {
+            $Type : 'UI.ReferenceFacet',
+            Label : '{i18n>Reviews}',
+            ID : 'i18nReviews',
+            Target : 'reviews/@UI.LineItem#i18nReviews',
         },
     ],
     UI.LineItem : [
@@ -65,8 +65,7 @@ annotate service.Hotels with @(
         },
         {
             $Type : 'UI.DataFieldForAnnotation',
-            Target : '@UI.DataPoint#rating',
-            Label : '{i18n>Rating}',
+            Target : '@UI.DataPoint#score',
         },
     ],
     UI.DataPoint #rating : {
@@ -76,7 +75,7 @@ annotate service.Hotels with @(
     },
     UI.SelectionFields : [
         location,
-        rating,
+        score,
     ],
     UI.DataPoint #rating1 : {
         $Type : 'UI.DataPointType',
@@ -88,8 +87,8 @@ annotate service.Hotels with @(
     UI.HeaderFacets : [
         {
             $Type : 'UI.ReferenceFacet',
-            ID : 'rating',
-            Target : '@UI.DataPoint#rating1',
+            ID : 'score',
+            Target : '@UI.DataPoint#rating3',
         },
     ],
     UI.DataPoint #name : {
@@ -162,6 +161,18 @@ annotate service.Hotels with @(
                 Label : '{i18n>Status}',
             },
         ],
+    },
+    UI.DataPoint #rating3 : {
+        $Type : 'UI.DataPointType',
+        Value : score,
+        Title : '{i18n>Score}',
+        TargetValue : 5,
+        Visualization : #Rating,
+    },
+    UI.DataPoint #score : {
+        Value : score,
+        Visualization : #Rating,
+        TargetValue : 5,
     },
 );
 
@@ -245,10 +256,144 @@ annotate service.Rooms with @(
             Value : status,
             Label : '{i18n>Status}',
         },
-    ]
+    ],
+    UI.Facets : [
+        {
+            $Type : 'UI.ReferenceFacet',
+            Label : '{i18n>RoomDetails}',
+            ID : 'i18nRoomDetails',
+            Target : '@UI.FieldGroup#i18nRoomDetails',
+        },
+    ],
+    UI.FieldGroup #i18nMakeAReservation : {
+        $Type : 'UI.FieldGroupType',
+        Data : [
+        ],
+    },
+    UI.SelectionPresentationVariant #i18nHotelRooms : {
+        $Type : 'UI.SelectionPresentationVariantType',
+        PresentationVariant : {
+            $Type : 'UI.PresentationVariantType',
+            Visualizations : [
+                '@UI.LineItem#i18nHotelRooms',
+            ],
+        },
+        SelectionVariant : {
+            $Type : 'UI.SelectionVariantType',
+            SelectOptions : [
+            ],
+        },
+    },
+    UI.SelectionPresentationVariant #i18nHotelRooms1 : {
+        $Type : 'UI.SelectionPresentationVariantType',
+        PresentationVariant : {
+            $Type : 'UI.PresentationVariantType',
+            Visualizations : [
+                '@UI.LineItem#i18nHotelRooms',
+            ],
+            SortOrder : [
+                {
+                    $Type : 'Common.SortOrderType',
+                    Property : imageUrl,
+                    Descending : false,
+                },
+            ],
+        },
+        SelectionVariant : {
+            $Type : 'UI.SelectionVariantType',
+            SelectOptions : [
+            ],
+        },
+    },
+    UI.HeaderInfo : {
+        TypeName : '{i18n>SelectedRoomsDetails}',
+        TypeNamePlural : '',
+        Title : {
+            $Type : 'UI.DataField',
+            Value : number,
+        },
+        Description : {
+            $Type : 'UI.DataField',
+            Value : '{i18n>SelectedRoomNumber}',
+        },
+        ImageUrl : imageUrl,
+    },
+    UI.FieldGroup #i18nRoomDetails : {
+        $Type : 'UI.FieldGroupType',
+        Data : [
+            {
+                $Type : 'UI.DataField',
+                Value : number,
+                Label : '{i18n>RoomNumber}',
+            },
+            {
+                $Type : 'UI.DataField',
+                Value : type,
+                Label : '{i18n>Type}',
+            },
+            {
+                $Type : 'UI.DataField',
+                Value : capacity,
+                Label : '{i18n>Capacity}',
+            },
+            {
+                $Type : 'UI.DataField',
+                Value : price,
+                Label : '{i18n>Price}',
+            },
+            {
+                $Type : 'UI.DataField',
+                Value : currency_code,
+            },
+        ],
+    },
 );
 
 annotate service.Rooms with {
     imageUrl @UI.IsImageURL : true
+};
+
+annotate service.Reviews with @(
+    UI.LineItem #i18nReviews : [
+        {
+            $Type : 'UI.DataFieldForAnnotation',
+            Target : '@UI.DataPoint#rating1',
+            Label : '{i18n>Rating}',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : reviewer.name,
+            Label : '{i18n>ReviewerName}',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : date,
+            Label : '{i18n>Date}',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : description,
+            Label : '{i18n>Text}',
+        },
+    ],
+    UI.DataPoint #score : {
+        Value : score,
+        Visualization : #Rating,
+        TargetValue : 5,
+    },
+    UI.DataPoint #rating : {
+        Value : rating,
+        Visualization : #Rating,
+        TargetValue : 5,
+    },
+    UI.DataPoint #rating1 : {
+        Value : rating,
+        Visualization : #Rating,
+        TargetValue : 5,
+    },
+);
+
+annotate service.Hotels with {
+    score @Common.Label : '{i18n>Score}'
 };
 
