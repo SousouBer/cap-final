@@ -345,6 +345,11 @@ annotate service.Rooms with @(
                 $Type : 'UI.DataField',
                 Value : currency_code,
             },
+            {
+                $Type : 'UI.DataFieldForAction',
+                Action : 'CatalogService.EntityContainer/makeReservation',
+                Label : '{i18n>BookTheRoom}',
+            },
         ],
     },
 );
@@ -374,6 +379,11 @@ annotate service.Reviews with @(
             $Type : 'UI.DataField',
             Value : description,
             Label : '{i18n>Text}',
+        },
+        {
+            $Type : 'UI.DataFieldForAction',
+            Action : 'CatalogService.EntityContainer/createReview',
+            Label : '{i18n>CreateAReview}',
         },
     ],
     UI.DataPoint #score : {
