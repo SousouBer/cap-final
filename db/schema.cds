@@ -2,19 +2,13 @@ using { cuid, managed, Currency } from '@sap/cds/common';
 
 namespace sap.capire.hotelbooking;
 
-type Role : String enum {
-    Client;
-    Admin;
-    Owner;
-}
-
-entity Users : cuid {
+entity Owners : cuid {
+  avatarUrl: String;
   name: String;
   surname: String;
   email: String;
   phone: String;
-  role: Role;
-  reviews: Composition of many Reviews on reviews.reviewer = $self;
+  hotels: Association to many Hotels on hotel.owner = $self;
 }
 
 entity Hotels : cuid, managed {
@@ -23,10 +17,9 @@ entity Hotels : cuid, managed {
   description: String;
   location: String;
   score: Decimal;
-  owner: Association to Users;
-  rooms: Association to many Rooms on rooms.hotel = $self;
-  reviews: Composition of many Reviews on reviews.hotel = $self;
-  
+  owner: Association to Owners;
+  rooms: Composition of many Rooms on rooms.hotel = $self;
+  reviews: Composition of many Reviews on reviews.hotel = $self;  
 }
 
 type Type : String enum {
@@ -51,11 +44,11 @@ entity Rooms : cuid, managed {
 }
 
 entity Reviews : cuid, managed {
-  reviewer : Association to Users;
+  reviewerEmail : String;
   date: Date;
-  hotel: Association to Hotels;
   description: String;
   rating: Decimal;
+  hotel: Association to Hotels;
 }
 
 type BookingStatus : String enum {
@@ -65,10 +58,10 @@ type BookingStatus : String enum {
 }
 
 entity Bookings : cuid, managed {
-  client: Association to Users;
-  room: Association to Rooms;
+  client: String;
   bookingStatus: BookingStatus;
   startDate: Date;
   endDate: Date;
   totalPrice: Decimal;
+  room: Association to Rooms;
 } 
