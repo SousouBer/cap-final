@@ -174,6 +174,18 @@ annotate service.Hotels with @(
         Visualization : #Rating,
         TargetValue : 5,
     },
+    UI.Identification : [
+        {
+            $Type : 'UI.DataFieldForAction',
+            Action : 'CatalogService.EntityContainer/createReview',
+            Label : 'createReview',
+        },
+        {
+            $Type : 'UI.DataFieldForAction',
+            Action : 'CatalogService.createReview',
+            Label : '{i18n>LeaveAReview}',
+        },
+    ],
 );
 
 annotate service.Hotels with {
@@ -380,11 +392,6 @@ annotate service.Reviews with @(
             Value : description,
             Label : '{i18n>Text}',
         },
-        {
-            $Type : 'UI.DataFieldForAction',
-            Action : 'CatalogService.EntityContainer/createReview',
-            Label : '{i18n>CreateAReview}',
-        },
     ],
     UI.DataPoint #score : {
         Value : score,
@@ -402,8 +409,3 @@ annotate service.Reviews with @(
         TargetValue : 5,
     },
 );
-
-annotate service.Hotels with {
-    score @Common.Label : '{i18n>Score}'
-};
-

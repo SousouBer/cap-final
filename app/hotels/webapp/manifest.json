@@ -166,6 +166,13 @@
                       "sort": true
                     }
                   }
+                },
+                "reviews/@com.sap.vocabularies.UI.v1.LineItem#i18nReviews": {
+                  "actions": {
+                    "DataFieldForAction::CatalogService.EntityContainer::createReview": {
+                      "enableOnSelect": "single"
+                    }
+                  }
                 }
               }
             }

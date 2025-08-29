@@ -38,7 +38,9 @@
           "users": {
             "soso@mail.com": {
               "password": "soso",
-              "roles": [ "admin" ]
+              "roles": [
+                "admin"
+              ]
             }
           }
         }

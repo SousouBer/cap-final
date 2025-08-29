@@ -26,6 +26,7 @@ entity Hotels : cuid, managed {
   owner: Association to Users;
   rooms: Association to many Rooms on rooms.hotel = $self;
   reviews: Composition of many Reviews on reviews.hotel = $self;
+  
 }
 
 type Type : String enum {
