@@ -41,6 +41,12 @@
               "roles": [
                 "admin"
               ]
+            },
+            "sosoc@mail.com": {
+              "password": "soso",
+              "roles": [
+                "user"
+              ]
             }
           }
         }

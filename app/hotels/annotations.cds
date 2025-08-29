@@ -7,23 +7,38 @@ annotate service.Hotels with @(
         Data : [
             {
                 $Type : 'UI.DataField',
-                Label : 'name',
+                Value : imageUrl,
+                Label : '{i18n>ImageUrl}',
+            },
+            {
+                $Type : 'UI.DataField',
+                Label : '{i18n>Name}',
                 Value : name,
             },
             {
                 $Type : 'UI.DataField',
-                Label : 'description',
+                Label : '{i18n>Description}',
                 Value : description,
             },
             {
                 $Type : 'UI.DataField',
-                Label : 'location',
+                Label : '{i18n>Location}',
                 Value : location,
             },
             {
                 $Type : 'UI.DataField',
-                Value : score,
-                Label : '{i18n>Score}',
+                Value : ownerFullName,
+                Label : '{i18n>OwnerFullName}',
+            },
+            {
+                $Type : 'UI.DataField',
+                Value : phone,
+                Label : '{i18n>Phone}',
+            },
+            {
+                $Type : 'UI.DataField',
+                Value : email,
+                Label : '{i18n>Email}',
             },
         ],
     },
@@ -186,6 +201,10 @@ annotate service.Hotels with @(
             Label : '{i18n>LeaveAReview}',
         },
     ],
+    Communication.Contact #contact : {
+        $Type : 'Communication.ContactType',
+        fn : ownerFullName,
+    },
 );
 
 annotate service.Hotels with {
@@ -221,6 +240,7 @@ annotate service.Hotels with {
 annotate service.Hotels with {
     location @(
         Common.Label : '{i18n>Location}',
+        Common.FieldControl : #Mandatory,
         )
 };
 
@@ -379,11 +399,6 @@ annotate service.Reviews with @(
         },
         {
             $Type : 'UI.DataField',
-            Value : reviewer.name,
-            Label : '{i18n>ReviewerName}',
-        },
-        {
-            $Type : 'UI.DataField',
             Value : date,
             Label : '{i18n>Date}',
         },
@@ -391,6 +406,17 @@ annotate service.Reviews with @(
             $Type : 'UI.DataField',
             Value : description,
             Label : '{i18n>Text}',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : reviewerEmail,
+            Label : '{i18n>ReviewerEmail}',
+        },
+        {
+            $Type : 'UI.DataFieldForAction',
+            Action : 'CatalogService.EntityContainer/removeReview',
+            Label : '{i18n>DeleteAReview}',
+            Inline : true,
         },
     ],
     UI.DataPoint #score : {
@@ -409,3 +435,32 @@ annotate service.Reviews with @(
         TargetValue : 5,
     },
 );
+annotate service.Hotels with {
+    imageUrl @(
+        Common.FieldControl : #Mandatory,
+        )
+};
+
+annotate service.Hotels with {
+    name @Common.FieldControl : #Mandatory
+};
+
+annotate service.Hotels with {
+    description @(
+        Common.FieldControl : #Mandatory,
+        UI.MultiLineText : true,
+    )
+};
+
+annotate service.Hotels with {
+    ownerFullName @Common.FieldControl : #Mandatory
+};
+
+annotate service.Hotels with {
+    phone @Common.FieldControl : #Mandatory
+};
+
+annotate service.Hotels with {
+    email @Common.FieldControl : #Mandatory
+};
+

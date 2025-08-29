@@ -42,17 +42,21 @@ class CatalogService extends cds.ApplicationService {
       const { Rating, Text } = req.data;
 
       const hotelID = req.params[0].ID;
-      const userID = req.user.ID;
+      const userID = req.user.id;
 
-      console.log(req.user);
+      console.log("this is it", req);
 
       await INSERT.into("Reviews").entries({
         hotel_ID: hotelID,
-        reviewer_ID: userID,
+        reviewerEmail: userID,
         description: Text,
         rating: Rating,
         date: new Date(),
       });
+    });
+
+    this.on("removeReview", async (req) => {
+      console.log("it", req);
     });
 
     // Must call super.init() at the end

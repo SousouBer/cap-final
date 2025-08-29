@@ -2,22 +2,15 @@ using { cuid, managed, Currency } from '@sap/cds/common';
 
 namespace sap.capire.hotelbooking;
 
-entity Owners : cuid {
-  avatarUrl: String;
-  name: String;
-  surname: String;
-  email: String;
-  phone: String;
-  hotels: Association to many Hotels on hotel.owner = $self;
-}
-
 entity Hotels : cuid, managed {
   imageUrl: String;
   name: String;
   description: String;
   location: String;
   score: Decimal;
-  owner: Association to Owners;
+  ownerFullName: String;
+  email: String;
+  phone: String;
   rooms: Composition of many Rooms on rooms.hotel = $self;
   reviews: Composition of many Reviews on reviews.hotel = $self;  
 }
