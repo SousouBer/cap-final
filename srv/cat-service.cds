@@ -13,6 +13,9 @@ service CatalogService @(requires: 'authenticated-user', path:'/browse') {
 
     entity Rooms    as projection on my.Rooms
     excluding { createdAt, createdBy, modifiedAt, modifiedBy }
+    actions {
+        action makeReservation(fromDate: Date, toDate: Date) returns Boolean; 
+    }
 
     entity Bookings as projection on my.Bookings
     excluding { createdAt, createdBy, modifiedAt, modifiedBy }
@@ -22,9 +25,5 @@ service CatalogService @(requires: 'authenticated-user', path:'/browse') {
     actions {
         action removeReview() returns Boolean; 
     };
-
-    action makeReservation(hotelID: UUID, userID: UUID, fromDate: Date, toDate: Date) returns Boolean;
-    
-
 }
 

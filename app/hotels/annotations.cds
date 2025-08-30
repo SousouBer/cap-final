@@ -305,15 +305,6 @@ annotate service.Rooms with @(
             $Type : 'UI.DataField',
             Value : currency_code,
         },
-        {
-            $Type : 'UI.DataField',
-            Value : currency.symbol,
-        },
-        {
-            $Type : 'UI.DataField',
-            Value : status,
-            Label : '{i18n>Status}',
-        },
     ],
     UI.Facets : [
         {
@@ -395,20 +386,31 @@ annotate service.Rooms with @(
                 Label : '{i18n>Capacity}',
             },
             {
-                $Type : 'UI.DataField',
-                Value : price,
+                $Type : 'UI.DataFieldForAnnotation',
+                Target : '@UI.ConnectedFields#connected',
                 Label : '{i18n>Price}',
             },
             {
+                $Type : 'UI.DataFieldForAction',
+                Action : 'CatalogService.makeReservation',
+                Label : '{i18n>MakeAReservation}',
+            },
+        ],
+    },
+    UI.ConnectedFields #connected : {
+        $Type : 'UI.ConnectedFieldsType',
+        Template : '{price}-{currency_code}',
+        Data : {
+            $Type : 'Core.Dictionary',
+            price : {
+                $Type : 'UI.DataField',
+                Value : price,
+            },
+            currency_code : {
                 $Type : 'UI.DataField',
                 Value : currency_code,
             },
-            {
-                $Type : 'UI.DataFieldForAction',
-                Action : 'CatalogService.EntityContainer/makeReservation',
-                Label : '{i18n>BookTheRoom}',
-            },
-        ],
+        },
     },
 );
 
@@ -495,6 +497,50 @@ annotate service.Hotels with {
 
 annotate service.Bookings with @(
     UI.LineItem #tableView : [
+        {
+            $Type : 'UI.DataField',
+            Value : room.imageUrl,
+            Label : '{i18n>RoomImage}',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : room.number,
+            Label : '{i18n>RoomNumber}',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : room.capacity,
+            Label : '{i18n>Capacity}',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : startDate,
+            Label : '{i18n>CheckinDate}',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : endDate,
+            Label : '{i18n>CheckoutDate}',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : room.hotel.location,
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : room.hotel.phone,
+            Label : 'phone',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : totalPrice,
+            Label : 'totalPrice',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : bookingStatus,
+            Label : '{i18n>Status}',
+        },
     ],
     UI.SelectionPresentationVariant #tableView : {
         $Type : 'UI.SelectionPresentationVariantType',

@@ -5,36 +5,69 @@ const dbPrefix = "sap.capire.hotelbooking";
 class CatalogService extends cds.ApplicationService {
   async init() {
     // Make Reservation action
-    this.on("makeReservation", async (req) => {
-      const { hotelID, userID, fromDate, toDate } = req.data;
+    this.on("makeReservation", "Rooms", async (req) => {
+      const { fromDate, toDate } = req.data;
 
-      const availableRoom = await cds
-        .transaction(req)
-        .run(
-          SELECT.one
-            .from("Rooms")
-            .where({ hotel_ID: hotelID, status: "available" })
-        );
+      const roomId = req.params[1].ID;
+      const userEmail = req.user.id;
 
-      if (!availableRoom) return false;
+      const { Rooms } = cds.entities(dbPrefix);
 
-      await cds.transaction(req).run(
-        INSERT.into("Reservations").entries({
-          hotel_ID: hotelID,
-          room_ID: availableRoom.ID,
-          user_ID: userID,
-          startDate: fromDate,
-          endDate: toDate,
-        })
-      );
+      const room = await SELECT.one.from(Rooms).where({ ID: roomId });
 
-      await cds
-        .transaction(req)
-        .run(
-          UPDATE("Rooms")
-            .set({ status: "booked" })
-            .where({ ID: availableRoom.ID })
-        );
+      if (!room) {
+        return req.error(404, `Room with ID ${roomId} not found`);
+      }
+
+      const startDate = new Date(fromDate);
+      const endDate = new Date(toDate);
+
+      const milisecondsDifference = endDate - startDate;
+
+      const days = Math.ceil(milisecondsDifference / (1000 * 60 * 60 * 24));
+
+      const totalPrice = days * room.price;
+
+      const booking = {
+        room_ID: roomId,
+        client: userEmail,
+        startDate: fromDate,
+        endDate: toDate,
+        totalPrice,
+        bookingStatus: "Booked",
+      };
+
+      await INSERT.into("Bookings").entries(booking);
+
+      console.log("test this", booking);
+
+      // const availableRoom = await cds
+      //   .transaction(req)
+      //   .run(
+      //     SELECT.one
+      //       .from("Rooms")
+      //       .where({ hotel_ID: hotelID, status: "available" })
+      //   );
+
+      // if (!availableRoom) return false;
+
+      // await cds.transaction(req).run(
+      //   INSERT.into("Reservations").entries({
+      //     hotel_ID: hotelID,
+      //     room_ID: availableRoom.ID,
+      //     user_ID: userID,
+      //     startDate: fromDate,
+      //     endDate: toDate,
+      //   })
+      // );
+
+      // await cds
+      //   .transaction(req)
+      //   .run(
+      //     UPDATE("Rooms")
+      //       .set({ status: "booked" })
+      //       .where({ ID: availableRoom.ID })
+      //   );
 
       return true;
     });
