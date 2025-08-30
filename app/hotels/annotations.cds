@@ -65,6 +65,11 @@ annotate service.Hotels with @(
     UI.LineItem : [
         {
             $Type : 'UI.DataField',
+            Value : imageUrl,
+            Label : '{i18n>Image}',
+        },
+        {
+            $Type : 'UI.DataField',
             Label : '{i18n>Name}',
             Value : name,
         },
@@ -80,7 +85,8 @@ annotate service.Hotels with @(
         },
         {
             $Type : 'UI.DataFieldForAnnotation',
-            Target : '@UI.DataPoint#score',
+            Target : '@UI.DataPoint#score1',
+            Label : '{i18n>Score}',
         },
     ],
     UI.DataPoint #rating : {
@@ -204,6 +210,26 @@ annotate service.Hotels with @(
     Communication.Contact #contact : {
         $Type : 'Communication.ContactType',
         fn : ownerFullName,
+    },
+    UI.DataPoint #score1 : {
+        Value : score,
+        Visualization : #Rating,
+        TargetValue : 5,
+    },
+    UI.SelectionPresentationVariant #tableView : {
+        $Type : 'UI.SelectionPresentationVariantType',
+        PresentationVariant : {
+            $Type : 'UI.PresentationVariantType',
+            Visualizations : [
+                '@UI.LineItem',
+            ],
+        },
+        SelectionVariant : {
+            $Type : 'UI.SelectionVariantType',
+            SelectOptions : [
+            ],
+        },
+        Text : '{i18n>AvailableHotels}',
     },
 );
 
@@ -440,6 +466,7 @@ annotate service.Reviews with @(
 annotate service.Hotels with {
     imageUrl @(
         Common.FieldControl : #Mandatory,
+        UI.IsImageURL : true,
         )
 };
 
@@ -465,4 +492,24 @@ annotate service.Hotels with {
 annotate service.Hotels with {
     email @Common.FieldControl : #Mandatory
 };
+
+annotate service.Bookings with @(
+    UI.LineItem #tableView : [
+    ],
+    UI.SelectionPresentationVariant #tableView : {
+        $Type : 'UI.SelectionPresentationVariantType',
+        PresentationVariant : {
+            $Type : 'UI.PresentationVariantType',
+            Visualizations : [
+                '@UI.LineItem#tableView',
+            ],
+        },
+        SelectionVariant : {
+            $Type : 'UI.SelectionVariantType',
+            SelectOptions : [
+            ],
+        },
+        Text : '{i18n>YourBookings}',
+    },
+);
 
