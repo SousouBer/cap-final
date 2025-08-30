@@ -6,6 +6,19 @@ class CatalogService extends cds.ApplicationService {
   async init() {
     const { Rooms, Reviews, Bookings } = this.entities;
 
+    this.before("READ", "Bookings", async (req) => {
+      req.query.where({ client: req.user.id });
+    });
+
+    this.after("each", "Bookings", (booking) => {
+      const currentDate = new Date();
+      const bookingEndDate = new Date(booking.endDate);
+
+      if (bookingEndDate < currentDate) {
+        booking.bookingStatus = "Completed";
+      }
+    });
+
     this.before("makeReservation", "Rooms", async (req) => {
       const { fromDate, toDate } = req.data;
       const roomId = req.params[1].ID;
@@ -19,7 +32,11 @@ class CatalogService extends cds.ApplicationService {
         return req.error(404, `Room with ID ${roomId} not found`);
       }
 
-      if (endDate - startDate < 0) {
+      if (
+        endDate - startDate < 0 ||
+        new Date() >= new Date(startDate) ||
+        new Date() > new Date(endDate)
+      ) {
         return req.error(
           403,
           "Given date is incorrect. Please, choose days from today"
@@ -57,6 +74,7 @@ class CatalogService extends cds.ApplicationService {
         totalPrice,
         bookingStatus: "Booked",
       };
+      console.log(booking);
 
       await INSERT.into("Bookings").entries(booking);
 
@@ -76,13 +94,12 @@ class CatalogService extends cds.ApplicationService {
         return req.error(404, `Booking with ID ${bookingId} not found`);
       }
 
-      if (
-        booking.bookingStatus === "Cancelled" ||
-        booking.bookingStatus === "Ongoing"
-      ) {
+      const isCompleted = new Date() > new Date(booking.endDate);
+
+      if (booking.bookingStatus === "Cancelled" || isCompleted) {
         return req.error(
           403,
-          `The Booking with ID - ${bookingId} is already cancelled, or ongoing`
+          `The Booking with ID - ${bookingId} is already cancelled, or completed`
         );
       }
     });
