@@ -10,6 +10,23 @@ class CatalogService extends cds.ApplicationService {
       req.query.where({ client: req.user.id });
     });
 
+    this.after("each", "Hotels", async (hotel) => {
+      const hotelReviews = await SELECT.from("Reviews").where({
+        hotel_ID: hotel.ID,
+      });
+
+      if (!hotelReviews) {
+        hotel.score = 0;
+      } else {
+        const ratings = hotelReviews
+          .map((review) => review.rating)
+          .reduce((rating, acc) => rating + acc, 0);
+        const avgRating = ratings / hotelReviews.length;
+
+        hotel.score = avgRating;
+      }
+    });
+
     this.after("each", "Bookings", (booking) => {
       const currentDate = new Date();
       const bookingEndDate = new Date(booking.endDate);
