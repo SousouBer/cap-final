@@ -138,8 +138,25 @@
                   "tableSettings": {
                     "type": "ResponsiveTable"
                   }
+                },
+                "/Bookings/@com.sap.vocabularies.UI.v1.LineItem#tableView": {
+                  "columns": {
+                    "DataFieldForAction::CatalogService.cancelReservation": {
+                      "afterExecution": {
+                        "enableAutoScroll": true
+                      }
+                    }
+                  }
+                },
+                "/Bookings/@com.sap.vocabularies.UI.v1.LineItem#tableView1": {
+                  "columns": {
+                    "DataFieldForAction::CatalogService.cancelReservation": {
+                      "availability": "Default"
+                    }
+                  }
                 }
               },
+              "defaultTemplateAnnotationPath": "com.sap.vocabularies.UI.v1.SelectionPresentationVariant#tableView",
               "views": {
                 "paths": [
                   {
@@ -148,7 +165,7 @@
                   },
                   {
                     "key": "tableView1",
-                    "annotationPath": "com.sap.vocabularies.UI.v1.SelectionPresentationVariant#tableView",
+                    "annotationPath": "com.sap.vocabularies.UI.v1.SelectionPresentationVariant#tableView2",
                     "entitySet": "Bookings"
                   }
                 ]

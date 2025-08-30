@@ -4,6 +4,33 @@ const dbPrefix = "sap.capire.hotelbooking";
 
 class CatalogService extends cds.ApplicationService {
   async init() {
+    const { Rooms, Reviews, Bookings } = this.entities;
+
+    this.before("makeReservation", "Rooms", async (req) => {
+      const { fromDate, toDate } = req.data;
+      const roomId = req.params[1].ID;
+
+      const room = await SELECT.one.from(Rooms).where({ ID: roomId });
+
+      const startDate = new Date(fromDate);
+      const endDate = new Date(toDate);
+
+      if (!room) {
+        return req.error(404, `Room with ID ${roomId} not found`);
+      }
+
+      if (endDate - startDate < 0) {
+        return req.error(
+          403,
+          "Given date is incorrect. Please, choose days from today"
+        );
+      }
+
+      if (endDate - startDate === 0) {
+        return req.error(403, "Reservation should be more than one day.");
+      }
+    });
+
     // Make Reservation action
     this.on("makeReservation", "Rooms", async (req) => {
       const { fromDate, toDate } = req.data;
@@ -11,13 +38,7 @@ class CatalogService extends cds.ApplicationService {
       const roomId = req.params[1].ID;
       const userEmail = req.user.id;
 
-      const { Rooms } = cds.entities(dbPrefix);
-
       const room = await SELECT.one.from(Rooms).where({ ID: roomId });
-
-      if (!room) {
-        return req.error(404, `Room with ID ${roomId} not found`);
-      }
 
       const startDate = new Date(fromDate);
       const endDate = new Date(toDate);
@@ -39,35 +60,41 @@ class CatalogService extends cds.ApplicationService {
 
       await INSERT.into("Bookings").entries(booking);
 
-      console.log("test this", booking);
+      req.notify({
+        message: `Reservation made successfully, refresh the page to see the changes.`,
+      });
 
-      // const availableRoom = await cds
-      //   .transaction(req)
-      //   .run(
-      //     SELECT.one
-      //       .from("Rooms")
-      //       .where({ hotel_ID: hotelID, status: "available" })
-      //   );
+      return true;
+    });
 
-      // if (!availableRoom) return false;
+    this.before("cancelReservation", "Bookings", async (req) => {
+      const bookingId = req.params[0].ID;
 
-      // await cds.transaction(req).run(
-      //   INSERT.into("Reservations").entries({
-      //     hotel_ID: hotelID,
-      //     room_ID: availableRoom.ID,
-      //     user_ID: userID,
-      //     startDate: fromDate,
-      //     endDate: toDate,
-      //   })
-      // );
+      const booking = await SELECT.one.from(Bookings).where({ ID: bookingId });
 
-      // await cds
-      //   .transaction(req)
-      //   .run(
-      //     UPDATE("Rooms")
-      //       .set({ status: "booked" })
-      //       .where({ ID: availableRoom.ID })
-      //   );
+      if (!booking) {
+        return req.error(404, `Booking with ID ${bookingId} not found`);
+      }
+
+      if (
+        booking.bookingStatus === "Cancelled" ||
+        booking.bookingStatus === "Ongoing"
+      ) {
+        return req.error(
+          403,
+          `The Booking with ID - ${bookingId} is already cancelled, or ongoing`
+        );
+      }
+    });
+
+    this.on("cancelReservation", "Bookings", async (req) => {
+      const bookingId = req.params[0].ID;
+
+      await UPDATE(Bookings, bookingId).with({ bookingStatus: "Cancelled" });
+
+      req.notify({
+        message: `Reservation cancelled. refresh the page to see the changes.`,
+      });
 
       return true;
     });
@@ -79,8 +106,6 @@ class CatalogService extends cds.ApplicationService {
       const hotelID = req.params[0].ID;
       const userID = req.user.id;
 
-      console.log("this is it", req);
-
       await INSERT.into("Reviews").entries({
         hotel_ID: hotelID,
         reviewerEmail: userID,
@@ -88,13 +113,17 @@ class CatalogService extends cds.ApplicationService {
         rating: Rating,
         date: new Date(),
       });
+
+      req.notify({
+        message: `Review created, refresh the page to see the changes.`,
+      });
+
+      return true;
     });
 
     this.before("removeReview", async (req) => {
       const reviewId = req.params[1].ID;
       const userEmail = req.user.id;
-
-      const { Reviews } = cds.entities(dbPrefix);
 
       const review = await SELECT.one.from(Reviews).where({ ID: reviewId });
 
@@ -113,15 +142,14 @@ class CatalogService extends cds.ApplicationService {
     this.on("removeReview", async (req) => {
       const reviewId = req.params[1].ID;
 
-      const { Reviews } = cds.entities(dbPrefix);
-
       await DELETE.from(Reviews).where({ ID: reviewId });
-      req.notify({ message: `Review deleted` });
+      req.notify({
+        message: `Review deleted, refresh the page to see the changes.`,
+      });
 
       return true;
     });
 
-    // Must call super.init() at the end
     await super.init();
   }
 }

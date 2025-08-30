@@ -19,6 +19,9 @@ service CatalogService @(requires: 'authenticated-user', path:'/browse') {
 
     entity Bookings as projection on my.Bookings
     excluding { createdAt, createdBy, modifiedAt, modifiedBy }
+    actions {
+        action cancelReservation() returns Boolean;
+    }
 
     entity Reviews  as projection on my.Reviews 
     excluding { createdAt, createdBy, modifiedAt, modifiedBy }

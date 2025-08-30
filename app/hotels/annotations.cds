@@ -529,12 +529,12 @@ annotate service.Bookings with @(
         {
             $Type : 'UI.DataField',
             Value : room.hotel.phone,
-            Label : 'phone',
+            Label : '{i18n>Phone}',
         },
         {
             $Type : 'UI.DataField',
             Value : totalPrice,
-            Label : 'totalPrice',
+            Label : '{i18n>TotalPrice}',
         },
         {
             $Type : 'UI.DataField',
@@ -548,6 +548,136 @@ annotate service.Bookings with @(
             $Type : 'UI.PresentationVariantType',
             Visualizations : [
                 '@UI.LineItem#tableView',
+            ],
+        },
+        SelectionVariant : {
+            $Type : 'UI.SelectionVariantType',
+            SelectOptions : [
+            ],
+        },
+        Text : '{i18n>YourBookings}',
+    },
+    UI.LineItem #tableView1 : [
+        {
+            $Type : 'UI.DataField',
+            Value : room.imageUrl,
+            Label : '{i18n>RoomImage}',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : room.number,
+            Label : '{i18n>RoomNumber}',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : room.capacity,
+            Label : '{i18n>Capacity}',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : room.hotel.location,
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : room.hotel.phone,
+            Label : '{i18n>HotelPhone}',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : startDate,
+            Label : '{i18n>CheckinDate}',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : endDate,
+            Label : '{i18n>CheckoutDate}',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : totalPrice,
+            Label : '{i18n>TotalPrice}',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : bookingStatus,
+            Label : '{i18n>Status}',
+        },
+    ],
+    UI.SelectionPresentationVariant #tableView1 : {
+        $Type : 'UI.SelectionPresentationVariantType',
+        PresentationVariant : {
+            $Type : 'UI.PresentationVariantType',
+            Visualizations : [
+                '@UI.LineItem#tableView1',
+            ],
+        },
+        SelectionVariant : {
+            $Type : 'UI.SelectionVariantType',
+            SelectOptions : [
+            ],
+        },
+        Text : '{i18n>YourBookings}',
+    },
+    UI.LineItem #tableView2 : [
+        {
+            $Type : 'UI.DataField',
+            Value : room.imageUrl,
+            Label : 'Room Image',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : room.number,
+            Label : 'Room Number',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : room.capacity,
+            Label : 'Capacity',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : room.hotel.location,
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : room.hotel.phone,
+            Label : 'Hotel Phone',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : startDate,
+            Label : 'Check-in Date',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : endDate,
+            Label : 'Check-out Date',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : totalPrice,
+            Label : 'Total Price',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : bookingStatus,
+            Label : 'Booking Status',
+        },
+        {
+            $Type : 'UI.DataFieldForAction',
+            Action : 'CatalogService.cancelReservation',
+            Label : 'Cancel the Reservation',
+            Inline : true,
+            Criticality : #Negative,
+            @UI.Importance : #High,
+        },
+    ],
+    UI.SelectionPresentationVariant #tableView2 : {
+        $Type : 'UI.SelectionPresentationVariantType',
+        PresentationVariant : {
+            $Type : 'UI.PresentationVariantType',
+            Visualizations : [
+                '@UI.LineItem#tableView2',
             ],
         },
         SelectionVariant : {
