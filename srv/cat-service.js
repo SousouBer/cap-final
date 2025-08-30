@@ -6,6 +6,14 @@ class CatalogService extends cds.ApplicationService {
   async init() {
     const { Rooms, Reviews, Bookings } = this.entities;
 
+    this.before(
+      ["CREATE", "UPDATE", "DELETE"],
+      "Hotels",
+      (req) =>
+        req.user.is("admin") ||
+        req.reject(403, "Only admin has this permission")
+    );
+
     this.before("READ", "Bookings", async (req) => {
       req.query.where({ client: req.user.id });
     });

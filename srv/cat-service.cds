@@ -2,9 +2,6 @@ using { sap.capire.hotelbooking as my } from '../db/schema';
 
 service CatalogService @(requires: 'authenticated-user', path:'/browse') { 
     @odata.draft.enabled
-    @restrict: [
-        { grant: ['*'], to: 'admin'},
-        { grant: ['*'], to: 'user' }]
     entity Hotels as projection on my.Hotels
     excluding { createdAt, createdBy, modifiedAt, modifiedBy }
     actions {
