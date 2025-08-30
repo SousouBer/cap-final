@@ -414,9 +414,11 @@ annotate service.Reviews with @(
         },
         {
             $Type : 'UI.DataFieldForAction',
-            Action : 'CatalogService.EntityContainer/removeReview',
-            Label : '{i18n>DeleteAReview}',
+            Action : 'CatalogService.removeReview',
+            Label : '{i18n>RemoveAReview}',
             Inline : true,
+            Criticality : #Negative,
+            @UI.Importance : #High,
         },
     ],
     UI.DataPoint #score : {

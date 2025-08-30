@@ -1,5 +1,7 @@
 const cds = require("@sap/cds");
 
+const dbPrefix = "sap.capire.hotelbooking";
+
 class CatalogService extends cds.ApplicationService {
   async init() {
     // Make Reservation action
@@ -55,8 +57,35 @@ class CatalogService extends cds.ApplicationService {
       });
     });
 
+    this.before("removeReview", async (req) => {
+      const reviewId = req.params[1].ID;
+      const userEmail = req.user.id;
+
+      const { Reviews } = cds.entities(dbPrefix);
+
+      const review = await SELECT.one.from(Reviews).where({ ID: reviewId });
+
+      if (!review) {
+        return req.error(404, `Review with ID ${reviewId} not found`);
+      }
+
+      if (userEmail !== review.reviewerEmail) {
+        return req.error(
+          403,
+          `Review with ID ${reviewId} is not yours, You are unable to delete it.`
+        );
+      }
+    });
+
     this.on("removeReview", async (req) => {
-      console.log("it", req);
+      const reviewId = req.params[1].ID;
+
+      const { Reviews } = cds.entities(dbPrefix);
+
+      await DELETE.from(Reviews).where({ ID: reviewId });
+      req.notify({ message: `Review deleted` });
+
+      return true;
     });
 
     // Must call super.init() at the end
