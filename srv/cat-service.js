@@ -133,6 +133,18 @@ class CatalogService extends cds.ApplicationService {
       return true;
     });
 
+    this.before("createReview", "Hotels", async (req) => {
+      const { Rating, Text } = req.data;
+
+      if (Rating <= 0 || Rating > 5) {
+        return req.error(403, "Rating should be between 1 and 5");
+      }
+
+      if (Text === "") {
+        return req.error(403, "You cannot enter an empty text");
+      }
+    });
+
     // Make Review action
     this.on("createReview", "Hotels", async (req) => {
       const { Rating, Text } = req.data;
