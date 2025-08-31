@@ -7,23 +7,38 @@ annotate service.Hotels with @(
         Data : [
             {
                 $Type : 'UI.DataField',
-                Label : 'name',
+                Value : imageUrl,
+                Label : '{i18n>ImageUrl}',
+            },
+            {
+                $Type : 'UI.DataField',
+                Label : '{i18n>Name}',
                 Value : name,
             },
             {
                 $Type : 'UI.DataField',
-                Label : 'description',
+                Label : '{i18n>Description}',
                 Value : description,
             },
             {
                 $Type : 'UI.DataField',
-                Label : 'location',
+                Label : '{i18n>Location}',
                 Value : location,
             },
             {
                 $Type : 'UI.DataField',
-                Value : score,
-                Label : '{i18n>Score}',
+                Value : ownerFullName,
+                Label : '{i18n>OwnerFullName}',
+            },
+            {
+                $Type : 'UI.DataField',
+                Value : phone,
+                Label : '{i18n>Phone}',
+            },
+            {
+                $Type : 'UI.DataField',
+                Value : email,
+                Label : '{i18n>Email}',
             },
         ],
     },
@@ -50,6 +65,11 @@ annotate service.Hotels with @(
     UI.LineItem : [
         {
             $Type : 'UI.DataField',
+            Value : imageUrl,
+            Label : '{i18n>Image}',
+        },
+        {
+            $Type : 'UI.DataField',
             Label : '{i18n>Name}',
             Value : name,
         },
@@ -65,7 +85,8 @@ annotate service.Hotels with @(
         },
         {
             $Type : 'UI.DataFieldForAnnotation',
-            Target : '@UI.DataPoint#score',
+            Target : '@UI.DataPoint#score1',
+            Label : '{i18n>Score}',
         },
     ],
     UI.DataPoint #rating : {
@@ -75,7 +96,6 @@ annotate service.Hotels with @(
     },
     UI.SelectionFields : [
         location,
-        score,
     ],
     UI.DataPoint #rating1 : {
         $Type : 'UI.DataPointType',
@@ -174,6 +194,37 @@ annotate service.Hotels with @(
         Visualization : #Rating,
         TargetValue : 5,
     },
+    UI.Identification : [
+        {
+            $Type : 'UI.DataFieldForAction',
+            Action : 'CatalogService.createReview',
+            Label : '{i18n>LeaveAReview}',
+        },
+    ],
+    Communication.Contact #contact : {
+        $Type : 'Communication.ContactType',
+        fn : ownerFullName,
+    },
+    UI.DataPoint #score1 : {
+        Value : score,
+        Visualization : #Rating,
+        TargetValue : 5,
+    },
+    UI.SelectionPresentationVariant #tableView : {
+        $Type : 'UI.SelectionPresentationVariantType',
+        PresentationVariant : {
+            $Type : 'UI.PresentationVariantType',
+            Visualizations : [
+                '@UI.LineItem',
+            ],
+        },
+        SelectionVariant : {
+            $Type : 'UI.SelectionVariantType',
+            SelectOptions : [
+            ],
+        },
+        Text : '{i18n>AvailableHotels}',
+    },
 );
 
 annotate service.Hotels with {
@@ -209,6 +260,7 @@ annotate service.Hotels with {
 annotate service.Hotels with {
     location @(
         Common.Label : '{i18n>Location}',
+        Common.FieldControl : #Mandatory,
         )
 };
 
@@ -246,15 +298,6 @@ annotate service.Rooms with @(
         {
             $Type : 'UI.DataField',
             Value : currency_code,
-        },
-        {
-            $Type : 'UI.DataField',
-            Value : currency.symbol,
-        },
-        {
-            $Type : 'UI.DataField',
-            Value : status,
-            Label : '{i18n>Status}',
         },
     ],
     UI.Facets : [
@@ -337,6 +380,59 @@ annotate service.Rooms with @(
                 Label : '{i18n>Capacity}',
             },
             {
+                $Type : 'UI.DataFieldForAnnotation',
+                Target : '@UI.ConnectedFields#connected',
+                Label : '{i18n>Price}',
+            },
+            {
+                $Type : 'UI.DataFieldForAction',
+                Action : 'CatalogService.makeReservation',
+                Label : '{i18n>MakeAReservation}',
+            },
+        ],
+    },
+    UI.ConnectedFields #connected : {
+        $Type : 'UI.ConnectedFieldsType',
+        Template : '{price}-{currency_code}',
+        Data : {
+            $Type : 'Core.Dictionary',
+            price : {
+                $Type : 'UI.DataField',
+                Value : price,
+            },
+            currency_code : {
+                $Type : 'UI.DataField',
+                Value : currency_code,
+            },
+        },
+    },
+    UI.HeaderFacets : [
+        
+    ],
+    UI.FieldGroup #RoomDetails : {
+        $Type : 'UI.FieldGroupType',
+        Data : [
+            {
+                $Type : 'UI.DataField',
+                Value : imageUrl,
+                Label : '{i18n>ImageUrl}',
+            },
+            {
+                $Type : 'UI.DataField',
+                Value : number,
+                Label : 'Room Number',
+            },
+            {
+                $Type : 'UI.DataField',
+                Value : type,
+                Label : 'Type',
+            },
+            {
+                $Type : 'UI.DataField',
+                Value : capacity,
+                Label : 'Capacity',
+            },
+            {
                 $Type : 'UI.DataField',
                 Value : price,
                 Label : '{i18n>Price}',
@@ -350,7 +446,10 @@ annotate service.Rooms with @(
 );
 
 annotate service.Rooms with {
-    imageUrl @UI.IsImageURL : true
+    imageUrl @(
+        Common.FieldControl : #Optional,
+        UI.IsImageURL : true,
+    )
 };
 
 annotate service.Reviews with @(
@@ -362,11 +461,6 @@ annotate service.Reviews with @(
         },
         {
             $Type : 'UI.DataField',
-            Value : reviewer.name,
-            Label : '{i18n>ReviewerName}',
-        },
-        {
-            $Type : 'UI.DataField',
             Value : date,
             Label : '{i18n>Date}',
         },
@@ -374,6 +468,19 @@ annotate service.Reviews with @(
             $Type : 'UI.DataField',
             Value : description,
             Label : '{i18n>Text}',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : reviewerEmail,
+            Label : '{i18n>ReviewerEmail}',
+        },
+        {
+            $Type : 'UI.DataFieldForAction',
+            Action : 'CatalogService.removeReview',
+            Label : '{i18n>RemoveAReview}',
+            Inline : true,
+            Criticality : #Negative,
+            @UI.Importance : #High,
         },
     ],
     UI.DataPoint #score : {
@@ -392,8 +499,246 @@ annotate service.Reviews with @(
         TargetValue : 5,
     },
 );
+annotate service.Hotels with {
+    imageUrl @(
+        Common.FieldControl : #Mandatory,
+        )
+};
 
 annotate service.Hotels with {
-    score @Common.Label : '{i18n>Score}'
+    name @Common.FieldControl : #Mandatory
+};
+
+annotate service.Hotels with {
+    description @(
+        Common.FieldControl : #Mandatory,
+        UI.MultiLineText : true,
+    )
+};
+
+annotate service.Hotels with {
+    ownerFullName @Common.FieldControl : #Mandatory
+};
+
+annotate service.Hotels with {
+    phone @Common.FieldControl : #Mandatory
+};
+
+annotate service.Hotels with {
+    email @Common.FieldControl : #Mandatory
+};
+
+annotate service.Bookings with @(
+    UI.LineItem #tableView : [
+        {
+            $Type : 'UI.DataField',
+            Value : room.imageUrl,
+            Label : '{i18n>RoomImage}',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : room.number,
+            Label : '{i18n>RoomNumber}',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : room.capacity,
+            Label : '{i18n>Capacity}',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : startDate,
+            Label : '{i18n>CheckinDate}',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : endDate,
+            Label : '{i18n>CheckoutDate}',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : room.hotel.location,
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : room.hotel.phone,
+            Label : '{i18n>Phone}',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : totalPrice,
+            Label : '{i18n>TotalPrice}',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : bookingStatus,
+            Label : '{i18n>Status}',
+        },
+    ],
+    UI.SelectionPresentationVariant #tableView : {
+        $Type : 'UI.SelectionPresentationVariantType',
+        PresentationVariant : {
+            $Type : 'UI.PresentationVariantType',
+            Visualizations : [
+                '@UI.LineItem#tableView',
+            ],
+        },
+        SelectionVariant : {
+            $Type : 'UI.SelectionVariantType',
+            SelectOptions : [
+            ],
+        },
+        Text : '{i18n>YourBookings}',
+    },
+    UI.LineItem #tableView1 : [
+        {
+            $Type : 'UI.DataField',
+            Value : room.imageUrl,
+            Label : '{i18n>RoomImage}',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : room.number,
+            Label : '{i18n>RoomNumber}',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : room.capacity,
+            Label : '{i18n>Capacity}',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : room.hotel.location,
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : room.hotel.phone,
+            Label : '{i18n>HotelPhone}',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : startDate,
+            Label : '{i18n>CheckinDate}',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : endDate,
+            Label : '{i18n>CheckoutDate}',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : totalPrice,
+            Label : '{i18n>TotalPrice}',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : bookingStatus,
+            Label : '{i18n>Status}',
+        },
+    ],
+    UI.SelectionPresentationVariant #tableView1 : {
+        $Type : 'UI.SelectionPresentationVariantType',
+        PresentationVariant : {
+            $Type : 'UI.PresentationVariantType',
+            Visualizations : [
+                '@UI.LineItem#tableView1',
+            ],
+        },
+        SelectionVariant : {
+            $Type : 'UI.SelectionVariantType',
+            SelectOptions : [
+            ],
+        },
+        Text : '{i18n>YourBookings}',
+    },
+    UI.LineItem #tableView2 : [
+        {
+            $Type : 'UI.DataField',
+            Value : room.imageUrl,
+            Label : 'Room Image',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : room.number,
+            Label : 'Room Number',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : room.capacity,
+            Label : 'Capacity',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : room.hotel.location,
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : room.hotel.phone,
+            Label : 'Hotel Phone',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : startDate,
+            Label : 'Check-in Date',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : endDate,
+            Label : 'Check-out Date',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : totalPrice,
+            Label : 'Total Price',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : bookingStatus,
+            Label : 'Booking Status',
+        },
+        {
+            $Type : 'UI.DataFieldForAction',
+            Action : 'CatalogService.cancelReservation',
+            Label : 'Cancel the Reservation',
+            Inline : true,
+            Criticality : #Negative,
+            @UI.Importance : #High,
+        },
+    ],
+    UI.SelectionPresentationVariant #tableView2 : {
+        $Type : 'UI.SelectionPresentationVariantType',
+        PresentationVariant : {
+            $Type : 'UI.PresentationVariantType',
+            Visualizations : [
+                '@UI.LineItem#tableView2',
+            ],
+        },
+        SelectionVariant : {
+            $Type : 'UI.SelectionVariantType',
+            SelectOptions : [
+            ],
+        },
+        Text : '{i18n>YourBookings}',
+    },
+);
+
+annotate service.Rooms with {
+    number @Common.FieldControl : #Mandatory
+};
+
+annotate service.Rooms with {
+    type @Common.FieldControl : #Mandatory
+};
+
+annotate service.Rooms with {
+    capacity @Common.FieldControl : #Mandatory
+};
+
+annotate service.Rooms with {
+    price @Common.FieldControl : #Mandatory
+};
+
+annotate service.Rooms with {
+    currency @Common.FieldControl : #Mandatory
 };
 

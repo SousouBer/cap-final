@@ -7,7 +7,8 @@
   "private": true,
   "dependencies": {
     "@sap/cds": "^9",
-    "express": "^4"
+    "express": "^4",
+    "@sap/xssec": "^4"
   },
   "engines": {
     "node": ">=20"
@@ -22,5 +23,37 @@
   },
   "sapux": [
     "app/hotels"
-  ]
+  ],
+  "cds": {
+    "requires": {
+      "db": {
+        "kind": "sqlite",
+        "credentials": {
+          "url": "db/my-bookshop.sqlite"
+        }
+      },
+      "[development]": {
+        "auth": {
+          "kind": "mocked",
+          "users": {
+            "soso@mail.com": {
+              "password": "soso",
+              "roles": [
+                "admin"
+              ]
+            },
+            "sosoc@mail.com": {
+              "password": "soso",
+              "roles": [
+                "user"
+              ]
+            }
+          }
+        }
+      },
+      "[production]": {
+        "auth": "xsuaa"
+      }
+    }
+  }
 }

@@ -1,1 +1,1 @@
-ID,client_ID,room_ID,bookingStatus,startDate,endDate,totalPrice,createdAt,createdBy,modifiedAt,modifiedBy
+ID,client,bookingStatus,startDate,endDate,totalPrice,room_ID,createdAt,createdBy,modifiedAt,modifiedBy
