@@ -35,4 +35,3 @@ service CatalogService @(requires: 'authenticated-user', path:'/browse') {
         action removeReview() returns Boolean; 
     };
 }
-
