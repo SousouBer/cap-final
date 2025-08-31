@@ -3,7 +3,7 @@ using { cuid, managed, Currency } from '@sap/cds/common';
 namespace sap.capire.hotelbooking;
 
 entity Hotels : cuid, managed {
-  imageUrl: String;
+  image: LargeBinary @Core.MediaType: 'image/png';
   name: String @mandatory;
   description: String @mandatory;
   location: String @mandatory;
@@ -11,7 +11,6 @@ entity Hotels : cuid, managed {
   ownerFullName: String @mandatory;
 
   @mandatory
-  @assert.format: '/^\S+@\S+\.\S+$/'
   @assert.format.message: 'Please, provide a valid email address'
   email: String;
 
@@ -26,7 +25,7 @@ type Type : String enum {
 }
 
 entity Rooms : cuid, managed {
-  imageUrl: String;
+  image: LargeBinary @Core.MediaType: 'image/png';
   number: Integer @mandatory;
   type: Type @mandatory;
   capacity: Integer @mandatory;

@@ -1,1 +1,1 @@
-ID,imageUrl,number,type,capacity,price,currency_code,hotel_ID,createdAt,createdBy,modifiedAt,modifiedBy
+ID,number,type,capacity,price,currency_code,hotel_ID,createdAt,createdBy,modifiedAt,modifiedBy

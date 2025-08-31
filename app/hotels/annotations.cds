@@ -7,8 +7,8 @@ annotate service.Hotels with @(
         Data : [
             {
                 $Type : 'UI.DataField',
-                Value : imageUrl,
-                Label : '{i18n>ImageUrl}',
+                Value : image,
+                Label : 'Hotel Image',
             },
             {
                 $Type : 'UI.DataField',
@@ -65,8 +65,8 @@ annotate service.Hotels with @(
     UI.LineItem : [
         {
             $Type : 'UI.DataField',
-            Value : imageUrl,
-            Label : '{i18n>Image}',
+            Value : image,
+            Label : 'Hotel Image',
         },
         {
             $Type : 'UI.DataField',
@@ -142,7 +142,7 @@ annotate service.Hotels with @(
             $Type : 'UI.DataField',
             Value : description,
         },
-        ImageUrl : imageUrl,
+        ImageUrl : image,
     },
     UI.FieldGroup #i18nTheListOfRooms : {
         $Type : 'UI.FieldGroupType',
@@ -272,8 +272,8 @@ annotate service.Rooms with @(
     UI.LineItem #i18nHotelRooms : [
         {
             $Type : 'UI.DataField',
-            Value : imageUrl,
-            Label : '{i18n>Preview}',
+            Value : image,
+            Label : 'Room Preview',
         },
         {
             $Type : 'UI.DataField',
@@ -359,11 +359,16 @@ annotate service.Rooms with @(
             $Type : 'UI.DataField',
             Value : '{i18n>SelectedRoomNumber}',
         },
-        ImageUrl : imageUrl,
+        ImageUrl : image,
     },
     UI.FieldGroup #i18nRoomDetails : {
         $Type : 'UI.FieldGroupType',
         Data : [
+            {
+                $Type : 'UI.DataField',
+                Value : image,
+                Label : 'Room Image',
+            },
             {
                 $Type : 'UI.DataField',
                 Value : number,
@@ -654,8 +659,8 @@ annotate service.Bookings with @(
     UI.LineItem #tableView2 : [
         {
             $Type : 'UI.DataField',
-            Value : room.imageUrl,
-            Label : 'Room Image',
+            Value : room.image,
+            Label : '{i18n>RoomPreview}',
         },
         {
             $Type : 'UI.DataField',
