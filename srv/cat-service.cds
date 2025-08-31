@@ -14,6 +14,10 @@ service CatalogService @(requires: 'authenticated-user', path:'/browse') {
         action makeReservation(fromDate: Date, toDate: Date) returns Boolean; 
     }
 
+    @(Capabilities:{
+        SearchRestrictions.Searchable: false,
+        DeleteRestrictions.Deletable: false
+    })
     entity Bookings as projection on my.Bookings
     excluding { createdAt, createdBy, modifiedAt, modifiedBy }
     actions {
@@ -23,7 +27,7 @@ service CatalogService @(requires: 'authenticated-user', path:'/browse') {
     @(Capabilities:{
         InsertRestrictions.Insertable: false,
         UpdateRestrictions.Updatable: false,
-        SearchRestrictions.Searchable: false
+        SearchRestrictions.Searchable: false,
     })
     entity Reviews  as projection on my.Reviews 
     excluding { createdAt, createdBy, modifiedAt, modifiedBy }
