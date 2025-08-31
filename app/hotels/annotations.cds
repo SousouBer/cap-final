@@ -198,11 +198,6 @@ annotate service.Hotels with @(
     UI.Identification : [
         {
             $Type : 'UI.DataFieldForAction',
-            Action : 'CatalogService.EntityContainer/createReview',
-            Label : 'createReview',
-        },
-        {
-            $Type : 'UI.DataFieldForAction',
             Action : 'CatalogService.createReview',
             Label : '{i18n>LeaveAReview}',
         },
