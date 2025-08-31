@@ -96,7 +96,6 @@ annotate service.Hotels with @(
     },
     UI.SelectionFields : [
         location,
-        score,
     ],
     UI.DataPoint #rating1 : {
         $Type : 'UI.DataPointType',
@@ -407,10 +406,50 @@ annotate service.Rooms with @(
             },
         },
     },
+    UI.HeaderFacets : [
+        
+    ],
+    UI.FieldGroup #RoomDetails : {
+        $Type : 'UI.FieldGroupType',
+        Data : [
+            {
+                $Type : 'UI.DataField',
+                Value : imageUrl,
+                Label : '{i18n>ImageUrl}',
+            },
+            {
+                $Type : 'UI.DataField',
+                Value : number,
+                Label : 'Room Number',
+            },
+            {
+                $Type : 'UI.DataField',
+                Value : type,
+                Label : 'Type',
+            },
+            {
+                $Type : 'UI.DataField',
+                Value : capacity,
+                Label : 'Capacity',
+            },
+            {
+                $Type : 'UI.DataField',
+                Value : price,
+                Label : '{i18n>Price}',
+            },
+            {
+                $Type : 'UI.DataField',
+                Value : currency_code,
+            },
+        ],
+    },
 );
 
 annotate service.Rooms with {
-    imageUrl @UI.IsImageURL : true
+    imageUrl @(
+        Common.FieldControl : #Optional,
+        UI.IsImageURL : true,
+    )
 };
 
 annotate service.Reviews with @(
@@ -463,7 +502,6 @@ annotate service.Reviews with @(
 annotate service.Hotels with {
     imageUrl @(
         Common.FieldControl : #Mandatory,
-        UI.IsImageURL : true,
         )
 };
 
@@ -683,4 +721,24 @@ annotate service.Bookings with @(
         Text : '{i18n>YourBookings}',
     },
 );
+
+annotate service.Rooms with {
+    number @Common.FieldControl : #Mandatory
+};
+
+annotate service.Rooms with {
+    type @Common.FieldControl : #Mandatory
+};
+
+annotate service.Rooms with {
+    capacity @Common.FieldControl : #Mandatory
+};
+
+annotate service.Rooms with {
+    price @Common.FieldControl : #Mandatory
+};
+
+annotate service.Rooms with {
+    currency @Common.FieldControl : #Mandatory
+};
 

@@ -8,7 +8,7 @@ class CatalogService extends cds.ApplicationService {
 
     this.before(
       ["CREATE", "UPDATE", "DELETE"],
-      "Hotels",
+      ["Hotels", "Rooms"],
       (req) =>
         req.user.is("admin") ||
         req.reject(403, "Only admin has this permission")
@@ -23,7 +23,7 @@ class CatalogService extends cds.ApplicationService {
         hotel_ID: hotel.ID,
       });
 
-      if (!hotelReviews) {
+      if (hotelReviews.length === 0) {
         hotel.score = 0;
       } else {
         const ratings = hotelReviews

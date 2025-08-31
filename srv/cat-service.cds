@@ -20,6 +20,11 @@ service CatalogService @(requires: 'authenticated-user', path:'/browse') {
         action cancelReservation() returns Boolean;
     }
 
+    @(Capabilities:{
+        InsertRestrictions.Insertable: false,
+        UpdateRestrictions.Updatable: false,
+        SearchRestrictions.Searchable: false
+    })
     entity Reviews  as projection on my.Reviews 
     excluding { createdAt, createdBy, modifiedAt, modifiedBy }
     actions {
