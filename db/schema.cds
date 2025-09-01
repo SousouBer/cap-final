@@ -3,14 +3,18 @@ using { cuid, managed, Currency } from '@sap/cds/common';
 namespace sap.capire.hotelbooking;
 
 entity Hotels : cuid, managed {
-  imageUrl: String;
-  name: String;
-  description: String;
-  location: String;
-  score: Decimal;
-  ownerFullName: String;
+  image: LargeBinary @Core.MediaType: 'image/png';
+  name: String @mandatory;
+  description: String @mandatory;
+  location: String @mandatory;
+  score: Decimal default 0 @readonly;
+  ownerFullName: String @mandatory;
+
+  @mandatory
+  @assert.format.message: 'Please, provide a valid email address'
   email: String;
-  phone: String;
+
+  phone: String @mandatory;
   rooms: Composition of many Rooms on rooms.hotel = $self;
   reviews: Composition of many Reviews on reviews.hotel = $self;  
 }
@@ -20,41 +24,37 @@ type Type : String enum {
   Double;
 }
 
-type Status : String enum {
-  Available;
-  Booked;
-}
-
 entity Rooms : cuid, managed {
-  imageUrl: String;
-  number: Integer;
-  type: Type;
-  status: Status;
-  capacity: Integer;
-  price: Decimal;
-  currency: Currency;
-  hotel: Association to Hotels;
+  image: LargeBinary @Core.MediaType: 'image/png';
+  number: Integer @mandatory;
+  type: Type @mandatory;
+  capacity: Integer @mandatory;
+  price: Decimal @mandatory;
+  currency: Currency default 'EUR';
+  hotel: Association to Hotels @mandatory @assert.target;
+  bookings: Composition of many Bookings on bookings.room = $self;
 }
 
+// Adding @assert.range:[1,5] would also work for rating element.
 entity Reviews : cuid, managed {
-  reviewerEmail : String;
-  date: Date;
-  description: String;
-  rating: Decimal;
-  hotel: Association to Hotels;
+  reviewerEmail : String @mandatory;
+  date: Date @mandatory;
+  description: String @mandatory;
+  rating: Decimal @mandatory;
+  hotel: Association to Hotels @assert.target;
 }
 
 type BookingStatus : String enum {
   Booked;
-  Ongoing;
+  Completed;
   Cancelled;
 }
 
 entity Bookings : cuid, managed {
-  client: String;
-  bookingStatus: BookingStatus;
-  startDate: Date;
-  endDate: Date;
-  totalPrice: Decimal;
-  room: Association to Rooms;
+  client: String @mandatory;
+  bookingStatus: BookingStatus @readonly;
+  startDate: Date @mandatory;
+  endDate: Date @mandatory;
+  totalPrice: Decimal @mandatory;
+  room: Association to Rooms @mandatory @assert.target;
 } 
